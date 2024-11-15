@@ -1,13 +1,39 @@
 import React from "react";
-import { style } from "./style.js";
-import { Box, Button, Typography } from "@material-ui/core";
+import { Box, Button, Typography, TextField } from "@mui/material";
+import style from "./style.js";
+import Status from "../../components/Status/index.jsx";
 
 function Home() {
-// interface simples onde os clientes possam inserir o número de rastreamento e visualizar o status da entrega.
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            // getObject();
+        }
+    };
+
     return (
         <Box sx={style.box}>
-            <Typography variant="h4" sx={style.typography}>Rastreamento de encomendas</Typography>
-            <Button variant="contained" color="primary" sx={style.button}>Rastrear</Button>
+            <Box sx={style.boxTop}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <TextField variant="standard" sx={style.input} label="Código de rastreamento" onKeyDown={handleKeyDown} />
+                    <Button variant="contained" color="primary" sx={style.button}>
+                        Rastrear
+                    </Button>
+                </Box>
+                <Box sx={style.logoContainer}>
+                    <Typography variant="h4" sx={style.typography}>
+                        Rastreamento de Encomendas
+                    </Typography>
+                </Box>
+            </Box>
+
+            <Box sx={style.boxBottom}>
+                <Status type="Objeto postado"/>
+                <Status type="Objeto em trânsito"/>
+                <Status type="Saiu para entrega"/>
+                <Status type="Entregue"/>
+                <Status type="Objeto recebido pelos Correios do Brasil"/>
+            </Box>
         </Box>
     );
 }
