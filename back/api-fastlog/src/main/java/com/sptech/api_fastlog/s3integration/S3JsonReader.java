@@ -20,8 +20,8 @@ import java.util.List;
 @Service
 public class S3JsonReader {
 
-    private static final String BUCKET_NAME = "seu-bucket";
-    private static final String FILE_KEY = "seu-arquivo.json";
+    private static final String BUCKET_NAME = "fastlog--raw";
+    private static final String FILE_KEY = "db.json";
 
     @Autowired
     private EntregaRepository entregaRepository;

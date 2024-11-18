@@ -20,8 +20,6 @@ public class Entrega {
     @NotBlank
     private String nomeEntrega;
 
-    @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL)  // Mapear a relação corretamente
+    @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Status> statusEntrega;  // Alterar para uma lista
-
-
 }
