@@ -1,61 +1,72 @@
 import React from "react";
 import { Box, Typography, Divider } from "@mui/material";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import HouseIcon from "@mui/icons-material/House";
-import LocalPostOfficeIcon from "@mui/icons-material/LocalPostOffice";
-import MarkunreadMailboxIcon from "@mui/icons-material/MarkunreadMailbox";
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import PendingIcon from '@mui/icons-material/Pending';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalPostOfficeIcon from '@mui/icons-material/LocalPostOffice';
+import ErrorIcon from '@mui/icons-material/Error';
 import style from "./style.js";
 
-function Status({ type }) {
+function Status({ props }) {
+
+    const { idStatus, descricao, tipo } = props;
+
+    console.log(props);
+    
 
     const getStatusContent = () => {
-        switch (type) {
-            case "Entregue":
+        switch (tipo) {
+            case "CREATE":
                 return (
                     <Box sx={style.statusContainer}>
-                        <HouseIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
+                        <LibraryAddIcon sx={style.iconStyle} />
+                        <Typography variant="body2">{descricao}</Typography>
                     </Box>
                 );
-            case "Saiu para entrega":
+            case "PROCESS":
+                return (
+                    <Box sx={style.statusContainer}>
+                        <PendingIcon sx={style.iconStyle} />
+                        <Typography variant="body2">{descricao}</Typography>
+                    </Box>
+                );
+            case "MOVING":
                 return (
                     <Box sx={style.statusContainer}>
                         <LocalShippingIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
+                        <Typography variant="body2">{descricao}</Typography>
                     </Box>
                 );
-            case "Objeto em trânsito":
+            case "DELIVERED":
                 return (
                     <Box sx={style.statusContainer}>
-                        <LocalShippingIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
+                        <LocalPostOfficeIcon sx={style.iconStyle} />
+                        <Typography variant="body2">{descricao}</Typography>
                     </Box>
                 );
-            case "Objeto postado":
+            case "UNDELIVERED":
                 return (
                     <Box sx={style.statusContainer}>
-                        <MarkunreadMailboxIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
-                    </Box>
-                );
-            case "Objeto recebido pelos Correios do Brasil":
-                return (
-                    <Box sx={style.statusContainer}>
-                        <MarkunreadMailboxIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
+                        <ErrorIcon sx={style.iconStyle} />
+                        <Typography variant="body2">{descricao}</Typography>
                     </Box>
                 );
             default:
                 return (
                     <Box sx={style.statusContainer}>
                         <LocalPostOfficeIcon sx={style.iconStyle} />
-                        <Typography>{type}</Typography>
+                        <Typography variant="body2">{descricao}</Typography>
                     </Box>
                 );
         }
     };
 
-    return getStatusContent();
+    return (
+        <Box sx={{ marginBottom: "10px" }}>
+            {getStatusContent()}
+            <Divider sx={{ marginY: 1 }} />
+        </Box>
+    );
 }
 
 export default Status;
