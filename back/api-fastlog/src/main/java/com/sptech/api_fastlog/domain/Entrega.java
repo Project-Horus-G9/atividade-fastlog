@@ -1,13 +1,10 @@
 package com.sptech.api_fastlog.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;  // Adicionar import para List
 
 @Entity
 @Setter
@@ -18,9 +15,11 @@ public class Entrega {
     private Long idEntrega;
 
     @NotBlank
-    private String nomeEntrega;
+    private String codigoEntrega;
 
     @NotBlank
-    @OneToOne
-    private Status statusEntrega;
+    private String nomeEntrega;
+
+    @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL)  // Mapear a relação corretamente
+    private List<Status> statusEntrega;  // Alterar para uma lista
 }

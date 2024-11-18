@@ -1,16 +1,14 @@
 package com.sptech.api_fastlog.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
 @Setter
+@Getter
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +20,7 @@ public class Status {
     @NotBlank
     private String tipo;
 
+    @JsonIgnore  // Ignora a referência recursiva
+    @ManyToOne
+    private Entrega entrega;
 }

@@ -31,6 +31,15 @@ public class EntregaService {
         return foundEntrega.get();
     }
 
+    public Entrega getEntregaByCodigoEntrega(String codigoEntrega){
+        Optional<Entrega> foundEntrega = entregaRepository.findByCodigoEntrega(codigoEntrega);
+        if(foundEntrega.isEmpty()){
+            throw new IllegalArgumentException(EntregaConstants.CODIGO_NAO_ENCONTRADO);
+        }
+
+        return foundEntrega.get();
+    }
+
     public void createEntrega(Entrega entrega){
         entregaRepository.save(entrega);
     }

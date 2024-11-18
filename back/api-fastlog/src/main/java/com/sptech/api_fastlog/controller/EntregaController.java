@@ -1,4 +1,5 @@
 package com.sptech.api_fastlog.controller;
+
 import com.sptech.api_fastlog.domain.Entrega;
 import com.sptech.api_fastlog.domain.Status;
 import com.sptech.api_fastlog.service.EntregaService;
@@ -25,6 +26,18 @@ public class EntregaController {
         return ResponseEntity.ok(entregas);
     }
 
+    // Alteração para aceitar código de rastreamento como String
+    @GetMapping("/pedido/{codigoEntrega}")
+    public ResponseEntity<?> getEntregaByCodigoEntrega(@PathVariable String codigoEntrega) {
+        try {
+            Entrega entrega = entregaService.getEntregaByCodigoEntrega(codigoEntrega);
+            return ResponseEntity.ok(entrega);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // Alteração do método para aceitar 'id' como Long
     @GetMapping("/{id}")
     public ResponseEntity<?> getEntregaById(@PathVariable Long id) {
         try {
