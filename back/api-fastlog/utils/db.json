@@ -1,0 +1,36 @@
+{
+  "entregas": [
+    {
+      "codigo_entrega": "ENT001",
+      "nome_entrega": "Entrega de livros",
+      "status": [
+        { "descricao": "Pedido criado", "tipo": "CREATE" },
+        { "descricao": "Em processamento", "tipo": "PROCESS" },
+        { "descricao": "Enviado ao transportador", "tipo": "MOVING" },
+        { "descricao": "A caminho do destino", "tipo": "MOVING" },
+        { "descricao": "Entregue", "tipo": "DELIVERED" }
+      ]
+    },
+    {
+      "codigo_entrega": "ENT002",
+      "nome_entrega": "Entrega de eletrônicos",
+      "status": [
+        { "descricao": "Pedido criado", "tipo": "CREATE" },
+        { "descricao": "Em processamento", "tipo": "PROCESS" },
+        { "descricao": "Enviado ao transportador", "tipo": "MOVING" },
+        { "descricao": "Pedido cancelado", "tipo": "UNDELIVERED" }
+      ]
+    },
+    {
+      "codigo_entrega": "ENT003",
+      "nome_entrega": "Entrega de roupas",
+      "status": [
+        { "descricao": "Pedido criado", "tipo": "CREATE" },
+        { "descricao": "Em processamento", "tipo": "PROCESS" },
+        { "descricao": "Enviado ao transportador", "tipo": "MOVING" },
+        { "descricao": "A caminho do destino", "tipo": "MOVING" },
+        { "descricao": "Entregue", "tipo": "DELIVERED" }
+      ]
+    }
+  ]
+}

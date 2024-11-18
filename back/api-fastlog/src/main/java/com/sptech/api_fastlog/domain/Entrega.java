@@ -22,4 +22,6 @@ public class Entrega {
 
     @OneToMany(mappedBy = "entrega", cascade = CascadeType.ALL)  // Mapear a relação corretamente
     private List<Status> statusEntrega;  // Alterar para uma lista
+
+
 }
