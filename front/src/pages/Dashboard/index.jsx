@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
-import axios from "axios";
+import { Box, Button, Typography, TextField } from "@mui/material";
+import AverageResponseTimeChart from "../../components/Status/graphs/averageResponseTimeChart.jsx"
+import ResponseTimeDistributionChart from "../../components/Status/graphs/responseTimeDistribuition.jsx";
+import HourlyResponseTimeChart from "../../components/Status/graphs/hourlyResponseTimeChart.jsx";
+import LatencyPeaksChart from "../../components/Status/graphs/latencyPeaksChart.jsx";
+
+import api from "../../api.js";
 import {
   Chart as ChartJS,
   BarElement,
@@ -9,156 +15,153 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Height, Padding } from "@mui/icons-material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const MetricsDashboard = () => {
+const Dashboard = () => {
   const [averageResponseTime, setAverageResponseTime] = useState(null);
   const [responseTimeDistribution, setResponseTimeDistribution] = useState([]);
   const [hourlyResponseTimes, setHourlyResponseTimes] = useState([]);
   const [latencyPeaks, setLatencyPeaks] = useState([]);
 
-  useEffect(() => {
-    fetchMetrics();
-  }, []);
+  const latencyData = [
+    { id: 1, valor: 600 },
+    { id: 2, valor: 700 },
+    { id: 3, valor: 800 },
+    { id: 4, valor: 750 },
+  ];
 
-  const fetchMetrics = async () => {
-    try {
-      // 1. Tempo Médio de Resposta
-      const averageResponse = await axios.get(
-        "/api/metrics/average-response-time",
-        { params: { metricName: "Tracking Search Load Time" } }
-      );
-      setAverageResponseTime(averageResponse.data);
+  const hourlyData = [
+    { hour: 0, averageResponseTime: 200 },
+    { hour: 1, averageResponseTime: 250 },
+    { hour: 2, averageResponseTime: 300 },
+    { hour: 3, averageResponseTime: 150 },
+    { hour: 4, averageResponseTime: 280 },
+  ];
 
-      // 2. Distribuição de Tempo de Resposta
-      const distributionResponse = await axios.get(
-        "/api/metrics/response-time-distribution",
-        { params: { metricName: "Tracking Search Load Time" } }
-      );
-      setResponseTimeDistribution(distributionResponse.data);
+  const responseTimeData = [
+    { range: "0-50ms", count: 120 },
+    { range: "50-100ms", count: 200 },
+    { range: "100-200ms", count: 150 },
+    { range: "200-500ms", count: 80 },
+    { range: "500ms+", count: 30 },
+  ];
 
-      // 4. Tempo Médio por Hora
-      const hourlyResponse = await axios.get(
-        "/api/metrics/average-response-time-by-hour",
-        { params: { metricName: "Tracking Search Load Time" } }
-      );
-      setHourlyResponseTimes(hourlyResponse.data);
+  const averageResponseTimes = [
+    { hour: "1", averageResponseTime: 120 },
+    { hour: "2", averageResponseTime: 150 },
+    { hour: "3", averageResponseTime: 90 },
+    { hour: "4", averageResponseTime: 200 },
+    { hour: "5", averageResponseTime: 180 },
+    // ... outros dados de tempo médio de resposta por hora
+  ];
 
-      // 6. Picos de Latência
-      const latencyResponse = await axios.get("/api/metrics/latency-peaks", {
-        params: { metricName: "Tracking Search Load Time", threshold: 500 },
-      });
-      setLatencyPeaks(latencyResponse.data);
-    } catch (error) {
-      console.error("Erro ao buscar métricas:", error);
-    }
-  };
 
   return (
     <div>
-      <h1>Métricas de Desempenho</h1>
 
-      {/* 1. Tempo Médio de Resposta */}
-      <div>
-        <h2>Tempo Médio de Resposta</h2>
-        {averageResponseTime !== null ? (
-          <p>
-            O tempo médio de resposta é <strong>{averageResponseTime.toFixed(2)} ms</strong>.
-          </p>
-        ) : (
-          <p>Carregando...</p>
-        )}
-      </div>
 
-      {/* 2. Distribuição de Tempo de Resposta */}
-      <div>
-        <h2>Distribuição de Tempo de Resposta</h2>
-        <Bar
-          data={{
-            labels: responseTimeDistribution.map((d) => d.range),
-            datasets: [
-              {
-                label: "Contagem",
-                data: responseTimeDistribution.map((d) => d.count),
-                backgroundColor: ["#4caf50", "#ff9800", "#f44336"],
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              legend: { display: true, position: "top" },
-              tooltip: { enabled: true },
-            },
-            scales: {
-              y: { beginAtZero: true },
-            },
-          }}
-        />
-      </div>
+      <Box  // cabeçalho 
 
-      {/* 4. Tempo Médio de Resposta por Hora */}
-      <div>
-        <h2>Tempo Médio de Resposta por Hora</h2>
-        <Line
-          data={{
-            labels: hourlyResponseTimes.map((d) => `${d.hour}:00`),
-            datasets: [
-              {
-                label: "Tempo Médio (ms)",
-                data: hourlyResponseTimes.map((d) => d.averageResponseTime),
-                borderColor: "#3e95cd",
-                fill: false,
-              },
-            ],
-          }}
-          options={{
-            plugins: {
-              legend: { display: true, position: "top" },
-              tooltip: { enabled: true },
-            },
-            scales: {
-              x: { beginAtZero: true },
-              y: { beginAtZero: true },
-            },
-          }}
-        />
-      </div>
+        style={
+          {
+            width: "100%",
+            backgroundColor: "#f7f30a",
+            display: "flex",
+            justifyContent: "center",  // Alinha horizontalmente
+            alignItems: "center",
+            height: "10rem"
+          }}>
+        <h1>Métricas de Desempenho</h1>
+      </Box>
 
-      {/* 6. Picos de Latência */}
-      <div>
-        <h2>Picos de Latência</h2>
-        {latencyPeaks.length > 0 ? (
-          <Pie
-            data={{
-              labels: latencyPeaks.map((p) => `ID ${p.id}`),
-              datasets: [
-                {
-                  label: "Latência (ms)",
-                  data: latencyPeaks.map((p) => p.valor),
-                  backgroundColor: [
-                    "#e57373",
-                    "#f06292",
-                    "#ba68c8",
-                    "#9575cd",
-                    "#7986cb",
-                  ],
-                },
-              ],
+      <Box style={{
+        width: "100%",
+        height: "50rem",
+        display: "flex"
+      }}>
+
+        <Box // Lado Esquerdo
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "50%",
+            height: "50rem",
+            padding: "3rem"
+          }}
+        >
+
+          <Box
+            style={{
+              width: "80%",
+              height: "20rem"
+
             }}
-            options={{
-              plugins: {
-                legend: { display: true, position: "right" },
-                tooltip: { enabled: true },
-              },
+          >
+
+            <AverageResponseTimeChart averageResponseTimes={averageResponseTimes}/>
+
+          </Box>
+
+          <Box
+            style={{
+              width: "80%",
+              height: "20rem"
+
             }}
-          />
-        ) : (
-          <p>Não foram detectados picos de latência acima do limite.</p>
-        )}
-      </div>
+          >
+            <ResponseTimeDistributionChart responseTimeDistribution={responseTimeData}/>
+          </Box>
+        </Box>
+
+
+        <Box // Lado Direito
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "50%",
+            height: "50rem",
+            padding: "3rem"
+          }}
+        >
+
+          <Box
+            style={{
+              width: "80%",
+              height: "20rem"
+            }}
+          >
+
+            <HourlyResponseTimeChart hourlyResponseTimes={hourlyData}/>
+
+          </Box>
+
+          <Box
+            style={{
+              width: "80%",
+              height: "20rem"
+            }}
+          >
+            <LatencyPeaksChart latencyPeaks={latencyData}/>
+          </Box>
+        </Box>
+
+
+
+      </Box>
+
+
+
+
     </div>
   );
 };
 
-export default MetricsDashboard;
+export default Dashboard;

@@ -1,5 +1,8 @@
 package com.sptech.api_fastlog.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sptech.api_fastlog.DTO.HourlyResponseTimeDTO;
+import com.sptech.api_fastlog.DTO.ResponseTimeDistributionDTO;
 import com.sptech.api_fastlog.domain.PerformanceMetric;
 import com.sptech.api_fastlog.repository.PerformanceMetricRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +39,16 @@ public class PerformanceMetricService {
     }
 
     // 2. Distribuição de Tempo de Resposta
-    public List<ResponseTimeDistribution> getResponseTimeDistribution(String metricName) {
+    public List<ResponseTimeDistributionDTO> getResponseTimeDistribution(String metricName) {
         return repository.findResponseTimeDistribution(metricName).stream()
-                .map(result -> new ResponseTimeDistribution(result[0].toString(), ((Long) result[1]).intValue()))
+                .map(result -> new ResponseTimeDistributionDTO(result[0].toString(), ((Long) result[1]).intValue()))
                 .collect(Collectors.toList());
     }
 
     // 4. Tempo de Resposta por Hora
-    public List<HourlyResponseTime> getAverageResponseTimeByHour(String metricName) {
+    public List<HourlyResponseTimeDTO> getAverageResponseTimeByHour(String metricName) {
         return repository.findAverageResponseTimeByHour(metricName).stream()
-                .map(result -> new HourlyResponseTime((Integer) result[0], (Double) result[1]))
+                .map(result -> new HourlyResponseTimeDTO((Integer) result[0], (Double) result[1]))
                 .collect(Collectors.toList());
     }
 
@@ -54,28 +57,5 @@ public class PerformanceMetricService {
         return repository.findLatencyPeaks(metricName, threshold);
     }
 
-    // DTOs
-    public static class ResponseTimeDistribution {
-        private String range;
-        private int count;
 
-        public ResponseTimeDistribution(String range, int count) {
-            this.range = range;
-            this.count = count;
-        }
-
-        // Getters e Setters
-    }
-
-    public static class HourlyResponseTime {
-        private int hour;
-        private double averageResponseTime;
-
-        public HourlyResponseTime(int hour, double averageResponseTime) {
-            this.hour = hour;
-            this.averageResponseTime = averageResponseTime;
-        }
-
-        // Getters e Setters
-    }
 }

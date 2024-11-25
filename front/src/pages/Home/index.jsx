@@ -34,7 +34,7 @@ function Home() {
                 // Envia a métrica para a API
                 sendPerformanceMetrics({
                     name: "Tracking Search Load Time",
-                    value: totalLoadTime.toFixed(2),
+                    valor: totalLoadTime.toFixed(2),
                     unit: "ms",
                     category: "Performance",
                     timestamp: new Date().toISOString(),

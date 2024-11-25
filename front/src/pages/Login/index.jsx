@@ -4,7 +4,9 @@ import { style } from "./style.js";
 function Login() {
 
     return (
-        <></>
+        <>
+        <div>ALÓ CARALHO</div>
+        </>
     );
 }
 
