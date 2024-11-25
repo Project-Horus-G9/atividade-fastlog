@@ -18,13 +18,14 @@ const HourlyResponseTimeChart = ({ hourlyResponseTimes }) => {
   }
 
   const chartData = {
-    labels: hourlyResponseTimes.map((d) => `${d.hour}:00`), // Exemplo: ['00:00', '01:00', '02:00', ...]
+    labels: hourlyResponseTimes.map((d) => `${d.hour}:00`), // Labels: ['0:00', '1:00', '2:00', ...]
     datasets: [
       {
         label: "Tempo Médio (ms)",
-        data: hourlyResponseTimes.map((d) => d.averageResponseTime), // Tempo médio de resposta por hora
+        data: hourlyResponseTimes.map((d) => d.averageResponseTime), // Dados da média de resposta por hora
         borderColor: "#3e95cd", // Cor da linha
-        fill: false, // Não preencher abaixo da linha
+        backgroundColor: "rgba(62, 149, 205, 0.2)", // Cor do fundo
+        fill: true, // Preenchimento abaixo da linha
       },
     ],
   };
@@ -35,8 +36,19 @@ const HourlyResponseTimeChart = ({ hourlyResponseTimes }) => {
       tooltip: { enabled: true },
     },
     scales: {
-      x: { beginAtZero: true },
-      y: { beginAtZero: true },
+      x: { 
+        title: {
+          display: true,
+          text: "Hora"
+        }
+      },
+      y: { 
+        title: {
+          display: true,
+          text: "Tempo Médio de Resposta (ms)"
+        },
+        beginAtZero: true,
+      },
     },
   };
 

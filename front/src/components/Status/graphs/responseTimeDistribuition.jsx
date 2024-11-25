@@ -18,12 +18,14 @@ const ResponseTimeDistributionChart = ({ responseTimeDistribution }) => {
   }
 
   const chartData = {
-    labels: responseTimeDistribution.map((d) => d.range), // Exemplo: ['0-50ms', '50-100ms', '100-200ms', ...]
+    labels: responseTimeDistribution.map((d) => d.range), // Exemplo: ['100-500ms', '500-1000ms', ...]
     datasets: [
       {
         label: "Contagem",
         data: responseTimeDistribution.map((d) => d.count), // Contagem de requisições por faixa de tempo
-        backgroundColor: ["#4caf50", "#ff9800", "#f44336"], // Cores das barras
+        backgroundColor: "#4caf50", // Cor das barras
+        borderColor: "#388e3c", // Cor da borda das barras
+        borderWidth: 1, // Largura da borda das barras
       },
     ],
   };
@@ -34,12 +36,24 @@ const ResponseTimeDistributionChart = ({ responseTimeDistribution }) => {
       tooltip: { enabled: true },
     },
     scales: {
-      y: { beginAtZero: true },
+      x: {
+        title: {
+          display: true,
+          text: "Faixa de Tempo de Resposta",
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Contagem",
+        },
+      },
     },
   };
 
   return (
-    <div>
+    <div style={{ width: "70%", padding: "1rem" }}>
       <h2>Distribuição de Tempo de Resposta</h2>
       <Bar data={chartData} options={chartOptions} />
     </div>

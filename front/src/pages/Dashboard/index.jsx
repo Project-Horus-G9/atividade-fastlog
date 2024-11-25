@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
-import { Box, Button, Typography, TextField } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import AverageResponseTimeChart from "../../components/Status/graphs/averageResponseTimeChart.jsx"
 import ResponseTimeDistributionChart from "../../components/Status/graphs/responseTimeDistribuition.jsx";
 import HourlyResponseTimeChart from "../../components/Status/graphs/hourlyResponseTimeChart.jsx";
@@ -15,151 +15,147 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Height, Padding } from "@mui/icons-material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const Dashboard = () => {
   const [averageResponseTime, setAverageResponseTime] = useState(null);
-  const [responseTimeDistribution, setResponseTimeDistribution] = useState([]);
-  const [hourlyResponseTimes, setHourlyResponseTimes] = useState([]);
+  const [responseTimeDistributions, setResponseTimeDistributions] = useState([]);
+  const [hourlyResponseTimess, setHourlyResponseTimess] = useState([]);
   const [latencyPeaks, setLatencyPeaks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const latencyData = [
-    { id: 1, valor: 600 },
-    { id: 2, valor: 700 },
-    { id: 3, valor: 800 },
-    { id: 4, valor: 750 },
-  ];
+  const navigate = useNavigate();
 
-  const hourlyData = [
-    { hour: 0, averageResponseTime: 200 },
-    { hour: 1, averageResponseTime: 250 },
-    { hour: 2, averageResponseTime: 300 },
-    { hour: 3, averageResponseTime: 150 },
-    { hour: 4, averageResponseTime: 280 },
-  ];
+  const goHome = () => {
+    navigate('/');
+  };
 
-  const responseTimeData = [
-    { range: "0-50ms", count: 120 },
-    { range: "50-100ms", count: 200 },
-    { range: "100-200ms", count: 150 },
-    { range: "200-500ms", count: 80 },
-    { range: "500ms+", count: 30 },
-  ];
+  const colherDados = async () => {
+    try {
+      const response = await api.get('/api/metrics/latency-peaks', {
+        params: { metricName: 'LP', threshold: 100.0 }
+      });
+      setLatencyPeaks(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar picos de latência:', error);
+    }
 
-  const averageResponseTimes = [
-    { hour: "1", averageResponseTime: 120 },
-    { hour: "2", averageResponseTime: 150 },
-    { hour: "3", averageResponseTime: 90 },
-    { hour: "4", averageResponseTime: 200 },
-    { hour: "5", averageResponseTime: 180 },
-    // ... outros dados de tempo médio de resposta por hora
-  ];
+    try {
+      const response = await api.get('/api/metrics/average-response-time', {
+        params: { metricName: 'ART' }
+      });
+      setAverageResponseTime(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar média de tempo de resposta:', error);
+    }
 
+    try {
+      const response = await api.get('/api/metrics/response-time-distribution', {
+        params: { metricName: 'RTD' }
+      });
+      setResponseTimeDistributions(response.data);
+      console.log("OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+    } catch (error) {
+      console.error('Erro ao buscar distribuição de tempo de resposta:', error);
+    }
+
+    try {
+      const response = await api.get('/api/metrics/average-response-time-by-hour', {
+        params: { metricName: 'HRT' }
+      });
+      setHourlyResponseTimess(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar tempo médio de resposta por hora:', error);
+    }
+
+    setLoading(false); // Define o loading como falso após capturar todos os dados
+  };
+
+  useEffect(() => {
+    colherDados(); // Chama a função colherDados ao montar o componente
+  }, []);
 
   return (
     <div>
-
-
-      <Box  // cabeçalho 
-
-        style={
-          {
-            width: "100%",
-            backgroundColor: "#f7f30a",
-            display: "flex",
-            justifyContent: "center",  // Alinha horizontalmente
-            alignItems: "center",
-            height: "10rem"
-          }}>
-        <h1>Métricas de Desempenho</h1>
-      </Box>
-
-      <Box style={{
-        width: "100%",
-        height: "50rem",
-        display: "flex"
-      }}>
-
-        <Box // Lado Esquerdo
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "50%",
-            height: "50rem",
-            padding: "3rem"
-          }}
-        >
-
-          <Box
-            style={{
-              width: "80%",
-              height: "20rem"
-
-            }}
-          >
-
-            <AverageResponseTimeChart averageResponseTimes={averageResponseTimes}/>
-
-          </Box>
-
-          <Box
-            style={{
-              width: "80%",
-              height: "20rem"
-
-            }}
-          >
-            <ResponseTimeDistributionChart responseTimeDistribution={responseTimeData}/>
-          </Box>
-        </Box>
-
-
-        <Box // Lado Direito
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "50%",
-            height: "50rem",
-            padding: "3rem"
-          }}
-        >
-
-          <Box
-            style={{
-              width: "80%",
-              height: "20rem"
-            }}
-          >
-
-            <HourlyResponseTimeChart hourlyResponseTimes={hourlyData}/>
-
-          </Box>
-
-          <Box
-            style={{
-              width: "80%",
-              height: "20rem"
-            }}
-          >
-            <LatencyPeaksChart latencyPeaks={latencyData}/>
-          </Box>
-        </Box>
-
-
+      <Box
+        style={{
+          width: "100%",
+          backgroundColor: "#f7f30a",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "10rem"
+        }}
+      >
+        <h1 onClick={goHome}>Métricas de Desempenho</h1>
 
       </Box>
 
+      {loading ? (
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh"
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box style={{ width: "100%", height: "50rem" }}>
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              height: "3rem",
+              padding: "3rem"
+            }}
+          >
+            <Typography variant="h5">
+              O tempo médio de resposta é: {averageResponseTime} ms
+            </Typography>
+          </Box>
 
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "80%",
+              height: "30rem",
+              padding: "3rem",
+              marginLeft: "12rem"
+            }}
+          >
+            <Box style={{ width: "45%", height: "20rem" }}>
+              <HourlyResponseTimeChart hourlyResponseTimes={hourlyResponseTimess} />
+            </Box>
 
+            <Box style={{ width: "45%", height: "20rem" }}>
+              <ResponseTimeDistributionChart responseTimeDistribution={responseTimeDistributions} />
+            </Box>
+          </Box>
 
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "70%",
+              height: "30rem",
+              marginLeft: "31rem"
+            }}
+          >
+            <Box style={{ width: "60%", height: "20rem" }}>
+              <LatencyPeaksChart latencyPeaks={latencyPeaks} />
+            </Box>
+          </Box>
+        </Box>
+      )}
     </div>
   );
 };

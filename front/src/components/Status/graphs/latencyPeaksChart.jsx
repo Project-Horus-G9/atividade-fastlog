@@ -16,7 +16,7 @@ const LatencyPeaksChart = ({ latencyPeaks }) => {
   }
 
   const chartData = {
-    labels: latencyPeaks.map((p) => `ID ${p.id}`), // Labels dos picos de latência
+    labels: latencyPeaks.map((p) => `ID ${p.id} - ${p.name}`), // Labels com ID e nome
     datasets: [
       {
         label: "Latência (ms)",
@@ -40,7 +40,7 @@ const LatencyPeaksChart = ({ latencyPeaks }) => {
   };
 
   return (
-    <div style={{width:"50%", display:"flex", flexDirection:"column", justifyContent:"center"}}>
+    <div style={{ width: "50%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <h2>Picos de Latência</h2>
       <Pie data={chartData} options={chartOptions} />
     </div>

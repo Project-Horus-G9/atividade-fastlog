@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, TextField } from "@mui/material";
 import style from "./style.js";
 import Status from "../../components/Status/index.jsx";
@@ -10,6 +11,11 @@ function Home() {
     const [loading, setLoading] = React.useState(false); // Estado de carregamento
     const [error, setError] = React.useState(null); // Estado de erro
     const [loadTime, setLoadTime] = React.useState(0); // Tempo de carregamento
+    const navigate = useNavigate();
+
+    const goDashboard = () => {
+        navigate('/dashboard'); // Navega para a rota /home
+    };
 
     useEffect(() => {
         if (!trackingCode) return; // Se não houver código, não faz a requisição
@@ -68,7 +74,7 @@ function Home() {
     return (
         <Box sx={style.box}>
             <Box sx={style.boxTop}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box sx={{ display: "flex", alignItems: "center"}}>
                     <TextField
                         variant="standard"
                         sx={style.input}
@@ -85,7 +91,20 @@ function Home() {
                     >
                         {loading ? "Carregando..." : "Rastrear"}
                     </Button>
+                    <Box>
+                        <Button
+                            onClick={() => goDashboard()}
+                            style={{
+                                backgroundColor: "black",
+                                color: "white",
+                                marginLeft:"1rem"
+                            }}
+                        >
+                            Ir para dashboard
+                        </Button>
+                    </Box>
                 </Box>
+
                 <Box sx={style.logoContainer}>
                     <Typography variant="h4" sx={style.typography}>
                         Rastreamento de Encomendas
