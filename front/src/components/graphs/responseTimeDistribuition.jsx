@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import  { Box, Typography } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -53,10 +54,12 @@ const ResponseTimeDistributionChart = ({ responseTimeDistribution }) => {
   };
 
   return (
-    <div style={{ width: "70%", padding: "1rem" }}>
-      <h2>Distribuição de Tempo de Resposta</h2>
+    <Box sx={{ height: 400 , width: 600}}>
+      <Typography variant="h5" sx={{ fontWeight: "bold", padding: "0 15px" }}>
+        Distribuição de Tempo de Resposta
+      </Typography>
       <Bar data={chartData} options={chartOptions} />
-    </div>
+    </Box>
   );
 };
 

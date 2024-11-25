@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Box, Typography } from "@mui/material";
 
 // Registra os componentes necessários do Chart.js
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Tooltip, Legend);
@@ -61,10 +62,10 @@ const AverageResponseTimeChart = ({ averageResponseTimes }) => {
   };
 
   return (
-    <div style={{ width: "100%", padding: "1rem" }}>
-      <h2>Tempo Médio de Resposta</h2>
+    <Box style={{ width: "100%", padding: "1rem" }}>
+      <Typography>Tempo Médio de Resposta</Typography>
       <Line data={chartData} options={chartOptions} />
-    </div>
+    </Box>
   );
 };
 

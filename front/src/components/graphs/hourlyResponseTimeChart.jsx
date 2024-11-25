@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Box, Typography } from "@mui/material";
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -36,13 +37,13 @@ const HourlyResponseTimeChart = ({ hourlyResponseTimes }) => {
       tooltip: { enabled: true },
     },
     scales: {
-      x: { 
+      x: {
         title: {
           display: true,
           text: "Hora"
         }
       },
-      y: { 
+      y: {
         title: {
           display: true,
           text: "Tempo Médio de Resposta (ms)"
@@ -53,10 +54,13 @@ const HourlyResponseTimeChart = ({ hourlyResponseTimes }) => {
   };
 
   return (
-    <div>
-      <h2>Tempo Médio de Resposta por Hora</h2>
+    <Box sx={{ height: 400, width: 600 }}>
+
+      <Typography variant="h5" sx={{ fontWeight: "bold", padding: "0 15px" }}>
+        Tempo Médio de Resposta por Hora
+      </Typography>
       <Line data={chartData} options={chartOptions} />
-    </div>
+    </Box>
   );
 };
 

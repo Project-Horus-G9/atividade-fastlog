@@ -24,7 +24,7 @@ const style = {
         padding: "8px 0",
     },
     button: {
-        width: 120,
+        margin: "0 20px",
         backgroundColor: "#000",
         color: "#fff",
         "&:hover": {
@@ -33,6 +33,7 @@ const style = {
         "&:active": {
             backgroundColor: "#000",
         },
+        padding: "5px 20px",
     },
     logoContainer: {
         display: "flex",

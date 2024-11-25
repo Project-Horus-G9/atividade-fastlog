@@ -6,25 +6,25 @@ import Status from "../../components/Status/index.jsx";
 import api from "../../api.js";
 
 function Home() {
-    const [trackingCode, setTrackingCode] = React.useState(""); // Código de rastreamento
-    const [status, setStatus] = React.useState([]); // Status da entrega
-    const [loading, setLoading] = React.useState(false); // Estado de carregamento
-    const [error, setError] = React.useState(null); // Estado de erro
-    const [loadTime, setLoadTime] = React.useState(0); // Tempo de carregamento
+    const [trackingCode, setTrackingCode] = React.useState("");
+    const [status, setStatus] = React.useState([]);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState(null);
+    const [loadTime, setLoadTime] = React.useState(0);
     const navigate = useNavigate();
 
     const goDashboard = () => {
-        navigate('/dashboard'); // Navega para a rota /home
+        navigate('/dashboard');
     };
 
     useEffect(() => {
-        if (!trackingCode) return; // Se não houver código, não faz a requisição
+        if (!trackingCode) return;
 
-        const startTime = performance.now(); // Marca o início da métrica de tempo
+        const startTime = performance.now();
 
         const getObject = async () => {
-            setLoading(true); // Começa o carregamento
-            setError(null); // Reseta erro antes da requisição
+            setLoading(true);
+            setError(null);
             try {
                 const response = await api.get(`/api/entregas/pedido/${trackingCode}`);
                 setStatus(response.data.statusEntrega);
@@ -32,12 +32,11 @@ function Home() {
                 setError("Erro ao buscar os dados da encomenda. Tente novamente.");
                 console.error(error);
             } finally {
-                setLoading(false); // Finaliza o carregamento
-                const endTime = performance.now(); // Marca o fim da métrica de tempo
-                const totalLoadTime = endTime - startTime; // Calcula o tempo total de carregamento
+                setLoading(false);
+                const endTime = performance.now();
+                const totalLoadTime = endTime - startTime;
                 setLoadTime(totalLoadTime);
 
-                // Envia a métrica para a API
                 sendPerformanceMetrics({
                     name: "Tracking Search Load Time",
                     valor: totalLoadTime.toFixed(2),
@@ -49,12 +48,12 @@ function Home() {
             }
         };
 
-        getObject(); // Chama a função de requisição
+        getObject();
     }, [trackingCode]);
 
     const sendPerformanceMetrics = async (metric) => {
         try {
-            await api.post("/api/metrics", metric); // Envia as métricas para a API Spring Boot
+            await api.post("/api/metrics", metric);
         } catch (error) {
             console.error("Erro ao enviar métricas:", error);
         }
@@ -74,7 +73,7 @@ function Home() {
     return (
         <Box sx={style.box}>
             <Box sx={style.boxTop}>
-                <Box sx={{ display: "flex", alignItems: "center"}}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                     <TextField
                         variant="standard"
                         sx={style.input}
@@ -94,11 +93,7 @@ function Home() {
                     <Box>
                         <Button
                             onClick={() => goDashboard()}
-                            style={{
-                                backgroundColor: "black",
-                                color: "white",
-                                marginLeft:"1rem"
-                            }}
+                            sx={style.button}
                         >
                             Ir para dashboard
                         </Button>

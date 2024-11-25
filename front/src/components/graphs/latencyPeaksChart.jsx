@@ -6,6 +6,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Box, Typography } from "@mui/material";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -40,10 +41,12 @@ const LatencyPeaksChart = ({ latencyPeaks }) => {
   };
 
   return (
-    <div style={{ width: "50%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <h2>Picos de Latência</h2>
+    <Box sx={{ height: 400 , width: 350}}>
+      <Typography variant="h5" sx={{ fontWeight: "bold", padding: "0 15px" }}>
+        Picos de Latência
+      </Typography>
       <Pie data={chartData} options={chartOptions} />
-    </div>
+    </Box>
   );
 };
 
