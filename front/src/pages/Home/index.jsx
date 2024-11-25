@@ -5,42 +5,65 @@ import Status from "../../components/Status/index.jsx";
 import api from "../../api.js";
 
 function Home() {
-    const [trackingCode, setTrackingCode] = React.useState("");  // Renomeei 'object' para 'trackingCode' para maior clareza
-    const [status, setStatus] = React.useState([]);  // Armazena os status da entrega
-    const [loading, setLoading] = React.useState(false);  // Adicionei estado de carregamento
-    const [error, setError] = React.useState(null);  // Adicionei estado de erro
+    const [trackingCode, setTrackingCode] = React.useState(""); // Código de rastreamento
+    const [status, setStatus] = React.useState([]); // Status da entrega
+    const [loading, setLoading] = React.useState(false); // Estado de carregamento
+    const [error, setError] = React.useState(null); // Estado de erro
+    const [loadTime, setLoadTime] = React.useState(0); // Tempo de carregamento
 
-    // useEffect que dispara a requisição sempre que o código de rastreamento mudar
     useEffect(() => {
         if (!trackingCode) return; // Se não houver código, não faz a requisição
 
+        const startTime = performance.now(); // Marca o início da métrica de tempo
+
         const getObject = async () => {
-            setLoading(true);  // Começa o carregamento
-            setError(null);  // Reseta erro antes da requisição
+            setLoading(true); // Começa o carregamento
+            setError(null); // Reseta erro antes da requisição
             try {
-                const response = await api.get(`/api/entregas/pedido/${trackingCode}`);  // Alterei o endpoint para 'api/entregas/pedido'
+                const response = await api.get(`/api/entregas/pedido/${trackingCode}`);
                 setStatus(response.data.statusEntrega);
             } catch (error) {
-                setError("Erro ao buscar os dados da encomenda. Tente novamente.");  // Adiciona mensagem de erro
+                setError("Erro ao buscar os dados da encomenda. Tente novamente.");
                 console.error(error);
             } finally {
-                setLoading(false);  // Finaliza o carregamento
+                setLoading(false); // Finaliza o carregamento
+                const endTime = performance.now(); // Marca o fim da métrica de tempo
+                const totalLoadTime = endTime - startTime; // Calcula o tempo total de carregamento
+                setLoadTime(totalLoadTime);
+
+                // Envia a métrica para a API
+                sendPerformanceMetrics({
+                    name: "Tracking Search Load Time",
+                    value: totalLoadTime.toFixed(2),
+                    unit: "ms",
+                    category: "Performance",
+                    timestamp: new Date().toISOString(),
+                    trackingCode,
+                });
             }
         };
 
         getObject(); // Chama a função de requisição
     }, [trackingCode]);
 
+    const sendPerformanceMetrics = async (metric) => {
+        try {
+            await api.post("/api/metrics", metric); // Envia as métricas para a API Spring Boot
+        } catch (error) {
+            console.error("Erro ao enviar métricas:", error);
+        }
+    };
+
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
-            handleSearch();  // Alterei o nome para 'handleSearch'
+            handleSearch();
         }
     };
 
     const handleSearch = () => {
-        var code = document.getElementById("trackingCodeId").value;  // Alterei 'object' para 'code' para maior clareza
-        setTrackingCode(code); 
-    }
+        const code = document.getElementById("trackingCodeId").value;
+        setTrackingCode(code);
+    };
 
     return (
         <Box sx={style.box}>
@@ -74,7 +97,7 @@ function Home() {
                 {error && <Typography color="error">{error}</Typography>}
                 {status.length > 0 ? (
                     status.map((item, index) => (
-                        <Status key={index} props={item} />  // Descomentei esta parte para renderizar o componente Status
+                        <Status key={index} props={item} />
                     ))
                 ) : (
                     <></>
